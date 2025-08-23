@@ -1,0 +1,9 @@
+SELECT ca.courier_id, ca.order_id, ca.action, ca.time::date, c.sex, c.birth_date from courier_actions ca
+join couriers c on ca.courier_id=c.courier_id
+where 1=1
+{% if from_dttm is not none %}
+and ca.time>='{{from_dttm}}'
+{% endif %}
+{% if to_dttm is not none %}
+and ca.time<='{{to_dttm}}'
+{% endif %}
