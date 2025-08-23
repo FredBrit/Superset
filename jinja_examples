@@ -56,3 +56,18 @@ SELECT courier_id::text,
       FROM courier_actions
       WHERE action = 'deliver_order'
       GROUP BY courier_id) AS sql
+
+
+### Сначала создаем датасет-справочник со значениями "переменных", далее подставляем это поле в filter_values и взависимости от значения переменной применяем ту или иную агрегационную функцию.
+select sex,
+(case
+when '{{filter_values('agg', remove_filter=True)[0]}}'='Max' then max(order_id)
+when '{{filter_values('agg', remove_filter=True)[0]}}'='Min' then min(order_id)
+when '{{filter_values('agg', remove_filter=True)[0]}}'='Avg' then avg(order_id)
+when '{{filter_values('agg', remove_filter=True)[0]}}'='Sum' then sum(order_id)
+else null end) as agregation from
+(SELECT ca.courier_id, ca.order_id, ca.action, ca.time::date, c.sex, c.birth_date
+from courier_actions ca
+join couriers c on ca.courier_id=c.courier_id) as t
+group by sex
+
