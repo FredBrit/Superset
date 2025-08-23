@@ -10,3 +10,49 @@ and ca.time>='{{from_dttm}}'
 {% if to_dttm is not none %}
 and ca.time<='{{to_dttm}}'
 {% endif %}
+
+
+### Здесь мы сначала создаем в sql-лабе отдельный датасет с рангами, затем создаем фильтр на его основе и применяем его только, к тем графикам, к которым нужно.
+### Подставляем через filter_values значение из этого фильтра, далее если хотим условие IN и накликивать несколько значений, то пишем так
+SELECT 
+    courier_id::text,
+    "orders",
+    rank() OVER (ORDER BY "orders" DESC) AS rnk,
+    CASE
+        WHEN rank() OVER (ORDER BY "orders" DESC) IN (
+            {% set values = filter_values('num', remove_filter=True) %}
+            {% if values %}
+                {{ values | map('int') | join(', ') }}
+            {% else %}
+                1, 2, 3  -- по умолчанию ТОП-3
+            {% endif %}
+        )
+        THEN courier_id::text
+        ELSE 'Other'
+    END AS couriers_id_TOP
+FROM (
+    SELECT 
+        courier_id,
+        COUNT(order_id) AS "orders"
+    FROM courier_actions
+    WHERE action = 'deliver_order'
+    GROUP BY courier_id
+) AS sql
+
+
+### Если хотим одно значение всегда передавать, то обращаемся к первому и единственному элементу списка
+SELECT courier_id::text,
+          "orders",
+          rank() OVER (
+                       ORDER BY "orders" DESC) AS rnk,
+                      CASE
+                          WHEN rank() OVER (
+                                            ORDER BY "orders" DESC) <= (('{{ filter_values('num',remove_filter=True,)[0] }}')) THEN courier_id::text
+                          ELSE 'Other'
+                      END AS couriers_id_TOP
+   FROM
+     (SELECT courier_id,
+             COUNT(order_id) AS "orders"
+      FROM courier_actions
+      WHERE action = 'deliver_order'
+      GROUP BY courier_id) AS sql
