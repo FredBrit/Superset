@@ -71,3 +71,6 @@ from courier_actions ca
 join couriers c on ca.courier_id=c.courier_id) as t
 group by sex
 
+### Предварительно вычислив какую-то метрику, можно через raw records добавить ее в плоскую таблицу и производить фильтрацию по данному столбцу, задав в настройках чарта данное выражение
+"summa">={{ (filter_values('sum(order_id)')[0] if filter_values('sum(order_id)') else 0) | int}}
+
