@@ -1,3 +1,6 @@
+### Если from_dttm и to_dttm не указаны, то фильтруем по всем датам до сегодняшнего дня
+### Если используем фильтр time_column, то подставляются вместо шаблонов подставляются края диапазона
+
 SELECT ca.courier_id, ca.order_id, ca.action, ca.time::date, c.sex, c.birth_date from courier_actions ca
 join couriers c on ca.courier_id=c.courier_id
 where 1=1
