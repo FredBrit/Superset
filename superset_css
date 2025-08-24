@@ -1,0 +1,66 @@
+/* Глобальные стили */
+body {
+    background-color: white;
+    color: blue;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+}
+
+.dashboard-component { 
+    background-color: white !important;
+}
+
+### Обращаемся к самому верхнему стилю-задаем границы и тень
+.dashboard-component.dashboard-component-chart-holder.dashboard-chart-id-527.fade-out.css-0 {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+### Добавляем конкретному чарту закрашивание заголовка, скругление и размещение текста заголовка по центру
+.dashboard-chart-id-527 .css-xojzyz .header-title {
+    background-color: yellow !important;
+    text-align: center !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    border-radius: 10px 10px 10px 10px !important;
+}
+
+### Задаем цвет, размер, шрифт и так далее для непосредственно самого текста заголовка. * для span, div, strong, чтобы не перекрываличь стили
+.dashboard-chart-id-527 .css-xojzyz .editable-title * {
+    font-size: 24px !important;
+    font-family: 'Arial', sans-serif !important;
+    color: blue !important;
+    margin: 1px 0 !important;
+    padding: 1px 0 !important;
+
+}
+
+
+
+.dashboard-component.dashboard-component-chart-holder.dashboard-chart-id-528.fade-out.css-0 {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.dashboard-chart-id-528 .css-xojzyz .header-title {
+    background-color: yellow !important;
+    text-align: center !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    border-radius: 10px 10px 0 0 !important;
+}
+
+.dashboard-chart-id-528 .css-xojzyz .editable-title * {
+    font-size: 24px !important;
+    font-family: 'Arial', sans-serif !important;
+    color: blue !important;
+    margin: 10px 0 !important;
+    padding: 5px 0 !important;
+
+}
