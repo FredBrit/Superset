@@ -74,3 +74,27 @@ group by sex
 ### Предварительно вычислив какую-то метрику, можно через raw records добавить ее в плоскую таблицу и производить фильтрацию по данному столбцу, задав в настройках чарта данное выражение
 "summa">={{ (filter_values('sum(order_id)')[0] if filter_values('sum(order_id)') else 0) | int}}
 
+
+### Присваиваем переменной первое значение из списка group, и взависимости от значения в фильтре, подставляем в гроупбай либо name, либо product_id
+{% set group_type = filter_values('group', remove_filter=True)[0] if filter_values('group', remove_filter=True) else 'name' %}
+
+SELECT
+    {% if group_type == 'name' %}
+        name AS dimension
+    {% elif group_type == 'product_id' %}
+        product_id AS dimension
+    {% else %}
+        name AS dimension
+    {% endif %},
+    SUM(price) AS sum_price
+FROM products
+GROUP BY
+    {% if group_type == 'name' %}
+        name
+    {% elif group_type == 'product_id' %}
+        product_id
+    {% else %}
+        name
+    {% endif %}
+ORDER BY sum_price DESC
+
