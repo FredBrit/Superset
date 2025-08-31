@@ -98,3 +98,33 @@ GROUP BY
     {% endif %}
 ORDER BY sum_price DESC
 
+
+### Шаблон для вычисления метрик за текущий и такой же прошлогодний период в рамках одного виртуального датасета. Для корректной работы устанавливаются значения по умолчанию и проверка на пустое значение
+{% set default_from = '2023-01-01' %}
+{% set default_to = '2025-12-31' %}
+
+{% set start_date = from_dttm if from_dttm else default_from %}
+{% set end_date = to_dttm if to_dttm else default_to %}
+
+SELECT
+    SUM(revenue) FILTER (
+        WHERE date >= '{{ start_date }}'::date
+          AND date < ('{{ end_date }}'::date + INTERVAL '1 day')  -- включает end_date
+    ) AS sum_price_current,
+
+    SUM(revenue) FILTER (
+        WHERE date >= ('{{ start_date }}'::date - INTERVAL '1 year')
+          AND date < ('{{ end_date }}'::date + INTERVAL '1 day' - INTERVAL '1 year')  -- тот же период в прошлом году
+    ) AS sum_price_last_year
+
+FROM (
+    SELECT
+        gs.dt::date AS date,
+        ROUND((random() * 10000)::numeric, 2) AS revenue
+    FROM generate_series(
+        '2023-01-01'::date,
+        '2025-12-31'::date,
+        '1 day'
+    ) AS gs(dt)
+) AS t
+
