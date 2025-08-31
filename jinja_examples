@@ -108,23 +108,16 @@ ORDER BY sum_price DESC
 
 SELECT
     SUM(revenue) FILTER (
-        WHERE date >= '{{ start_date }}'::date
-          AND date < ('{{ end_date }}'::date + INTERVAL '1 day')  -- включает end_date
+        WHERE dt >= '{{ start_date }}'::date
+          AND dt < ('{{ end_date }}'::date + INTERVAL '1 day')  -- включает end_date
     ) AS sum_price_current,
 
     SUM(revenue) FILTER (
-        WHERE date >= ('{{ start_date }}'::date - INTERVAL '1 year')
-          AND date < ('{{ end_date }}'::date + INTERVAL '1 day' - INTERVAL '1 year')  -- тот же период в прошлом году
+        WHERE dt >= ('{{ start_date }}'::date - INTERVAL '1 year')
+          AND dt < ('{{ end_date }}'::date + INTERVAL '1 day' - INTERVAL '1 year')  -- тот же период в прошлом году
     ) AS sum_price_last_year
 
 FROM (
-    SELECT
-        gs.dt::date AS date,
-        ROUND((random() * 10000)::numeric, 2) AS revenue
-    FROM generate_series(
-        '2023-01-01'::date,
-        '2025-12-31'::date,
-        '1 day'
-    ) AS gs(dt)
-) AS t
+    select dt, type_id as revenue from thermopoints 
+) AS t1
 
